@@ -1,0 +1,30 @@
+name: PythonAnywhere Deploy
+
+on:
+  push:
+    branches:
+      - main  # Adjust if your default branch is different
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy to PythonAnywhere via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ssh.pythonanywhere.com
+          username: ${{ secrets.PA_USERNAME }}
+          key: ${{ secrets.PA_SSH_KEY }}
+          script: |
+            cd /home/${{ secrets.PA_USERNAME }}/06nov_finalproject
+            git pull origin main
+            source /home/${{ secrets.PA_USERNAME }}/.virtualenvs/myvenv/bin/activate
+            pip install -r requirements.txt
+            python manage.py migrate
+            python manage.py collectstatic --noinput
+            # Reload the webapp using PythonAnywhere API
+            curl -X POST https://www.pythonanywhere.com/api/v0/user/${{ secrets.PA_USERNAME }}/webapps/${{ secrets.PA_DOMAIN }}/reload/ \
+              -H "Authorization: Token ${{ secrets.PA_API_TOKEN }}"

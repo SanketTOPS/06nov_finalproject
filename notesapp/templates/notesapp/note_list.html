@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}My Notes | NotesApp{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-extrabold text-gray-900">Your Notes</h1>
+    <a href="{% url 'notesapp:add' %}"
+        class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-150 shadow-md">
+        Create New Note
+    </a>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for note in notes %}
+    <div
+        class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition duration-200 flex flex-col justify-between">
+        <div>
+            <div class="flex justify-between items-start mb-2">
+                <h2 class="text-xl font-bold text-gray-900 truncate">{{ note.title }}</h2>
+                {% if user.is_staff %}
+                {% if note.status == 'PENDING' %}
+                <span class="px-2 py-0.5 text-[10px] font-bold rounded bg-yellow-100 text-yellow-700">PENDING</span>
+                {% elif note.status == 'APPROVED' %}
+                <span class="px-2 py-0.5 text-[10px] font-bold rounded bg-green-100 text-green-700">APPROVED</span>
+                {% else %}
+                <span class="px-2 py-0.5 text-[10px] font-bold rounded bg-red-100 text-red-700">REJECTED</span>
+                {% endif %}
+                {% endif %}
+            </div>
+            <p class="text-gray-600 line-clamp-3 mb-4">{{ note.content }}</p>
+        </div>
+        <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-50">
+            <span class="text-gray-400 text-xs">{{ note.created_at|date:"M d, Y" }}</span>
+            <div class="flex space-x-2">
+                <a href="{% url 'notesapp:detail' note.pk %}"
+                    class="text-indigo-600 hover:text-indigo-800 font-medium text-sm">View</a>
+                <a href="{% url 'notesapp:edit' note.pk %}"
+                    class="text-gray-600 hover:text-gray-800 font-medium text-sm">Edit</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full py-20 text-center">
+        <div class="text-gray-400 text-6xl mb-4">📭</div>
+        <p class="text-gray-500 text-lg">No notes yet. Start by creating one!</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

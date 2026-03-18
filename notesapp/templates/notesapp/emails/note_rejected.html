@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update on Your Note</title>
+</head>
+
+<body
+    style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7fa; color: #333;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
+        <tr>
+            <td align="center" style="padding: 40px 0;">
+                <table border="0" cellpadding="0" cellspacing="0" width="600"
+                    style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #e1e8ed; max-width: 90%;">
+                    <!-- Header -->
+                    <tr>
+                        <td align="center"
+                            style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 40px 20px;">
+                            <div
+                                style="background-color: rgba(255, 255, 255, 0.2); width: 60px; height: 60px; border-radius: 50%; display: inline-block; line-height: 60px; margin-bottom: 20px;">
+                                <span style="font-size: 30px; color: #ffffff;">✕</span>
+                            </div>
+                            <h1
+                                style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">
+                                Note Rejected</h1>
+                        </td>
+                    </tr>
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <p style="font-size: 18px; line-height: 1.6; margin-bottom: 20px;">Hi <strong>{{ username }}</strong>,</p>
+                            <p style="font-size: 16px; line-height: 1.6; color: #4b5563; margin-bottom: 30px;">
+                                We are writing to inform you that your note titled <span
+                                    style="color: #dc2626; font-weight: 600;">"{{ note_title }}"</span> was not approved
+                                for publication at this time.
+                            </p>
+
+                            <div
+                                style="background-color: #fff1f2; border-radius: 12px; padding: 20px; border: 1px dashed #fecaca; margin-bottom: 30px;">
+                                <h3
+                                    style="margin-top: 0; color: #991b1b; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;">
+                                    Status Update</h3>
+                                <p style="margin: 5px 0; font-size: 15px;"><strong>Note:</strong> {{ note_title }}</p>
+                                <p style="margin: 5px 0; font-size: 15px;"><strong>Status:</strong> <span
+                                        style="color: #dc2626; font-weight: bold;">Rejected</span></p>
+                            </div>
+
+                            <p style="font-size: 15px; color: #6b7280; line-height: 1.6; margin-bottom: 30px;">
+                                You can review our community guidelines and edit your note to resubmit it for another
+                                review.
+                                If you have any questions, feel free to reach out to our support team.
+                            </p>
+
+                            <div align="center">
+                                <a href="{{ dashboard_url }}"
+                                    style="display: inline-block; background-color: #374151; color: #ffffff; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; transition: background-color 0.3s ease;">Edit
+                                    and Resubmit</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td
+                            style="padding: 20px 30px; background-color: #f8fafc; text-align: center; border-top: 1px solid #edf2f7;">
+                            <p style="margin: 0; font-size: 13px; color: #94a3b8;">
+                                Thank you for using NotesApp! <br>
+                                This is an automated message, please do not reply.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NotesApp{% endblock %}</title>
+    <!-- Tailwind CSS v3 CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Style standard Django form widgets globally */
+        form p input,
+        form p textarea,
+        form p select,
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            margin-top: 0.25rem;
+            margin-bottom: 1rem;
+            display: block;
+            transition: all 0.2s;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        ul.errorlist {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            list-style: none;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 text-gray-900 flex flex-col min-h-screen">
+
+    <!-- Django Messages with SweetAlert2 -->
+    {% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% for message in messages %}
+            Swal.fire({
+                icon: "{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}",
+                title: "{{ message.tags|capfirst }}",
+                text: "{{ message }}",
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
+            {% endfor %}
+        });
+    </script>
+    {% endif %}
+
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center space-x-8">
+                    <a href="{% url 'notesapp:list' %}" class="text-2xl font-bold text-indigo-600">NotesApp</a>
+                    <div class="hidden md:flex space-x-4">
+                        <a href="{% url 'notesapp:about' %}"
+                            class="text-gray-600 hover:text-indigo-600 font-medium">About</a>
+                        <a href="{% url 'notesapp:contact' %}"
+                            class="text-gray-600 hover:text-indigo-600 font-medium">Contact</a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                    <span class="text-gray-600">Logged in as <strong>{{ user.username }}</strong></span>
+                    {% if user.is_staff %}
+                    <a href="{% url 'notesapp:user_list' %}"
+                        class="text-indigo-600 hover:text-indigo-800 font-semibold px-3 py-2 rounded-md bg-indigo-50">Manage
+                        Users</a>
+                    <a href="{% url 'notesapp:dashboard' %}"
+                        class="text-indigo-600 hover:text-indigo-800 font-semibold px-3 py-2 rounded-md bg-indigo-50">Dashboard</a>
+                    {% endif %}
+                    <form action="{% url 'accounts:logout' %}" method="post" class="inline">
+                        {% csrf_token %}
+                        <button type="submit" class="text-gray-600 hover:text-indigo-600 font-medium">Logout</button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}"
+                        class="text-gray-600 hover:text-indigo-600 font-medium">Login</a>
+                    <a href="{% url 'accounts:signup' %}"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-150 font-medium">Sign
+                        Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            <div class="mb-4 space-x-4">
+                <a href="{% url 'notesapp:about' %}" class="hover:text-indigo-600 transition-colors">About Us</a>
+                <a href="{% url 'notesapp:contact' %}" class="hover:text-indigo-600 transition-colors">Contact
+                    Support</a>
+            </div>
+            &copy; 2025(Test) NotesApp. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+
+</html>

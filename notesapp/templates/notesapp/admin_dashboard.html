@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard | NotesApp{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row gap-8">
+    <!-- Sidebar / Stats Overview -->
+    <aside class="w-full md:w-64 flex flex-col gap-6">
+        <div class="bg-indigo-600 rounded-2xl p-6 text-white shadow-lg">
+            <h3 class="text-sm font-medium opacity-80 mb-1">Total Notes</h3>
+            <p class="text-3xl font-bold">{{ total_notes }}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">Total Users</h3>
+            <p class="text-3xl font-bold text-gray-900">{{ total_users }}</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <h3 class="text-sm font-medium text-gray-500 mb-1">New Notes (24h)</h3>
+            <p class="text-3xl font-bold text-gray-900">{{ new_notes_24h }}</p>
+        </div>
+    </aside>
+
+    <!-- Main Dashboard Area -->
+    <div class="flex-grow space-y-8">
+        <!-- Recent Notes Table -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-50 flex justify-between items-center">
+                <h2 class="text-xl font-bold text-gray-900">Recent Notes</h2>
+                <a href="{% url 'notesapp:list' %}"
+                    class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-semibold">
+                        <tr>
+                            <th class="px-6 py-3">Title</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3">Date</th>
+                            <th class="px-6 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50">
+                        {% for note in recent_notes %}
+                        <tr class="hover:bg-gray-50 transition duration-150">
+                            <td class="px-6 py-4 font-medium text-gray-900 truncate max-w-[200px]">{{ note.title }}</td>
+                            <td class="px-6 py-4">
+                                {% if note.status == 'PENDING' %}
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                                {% elif note.status == 'APPROVED' %}
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Approved</span>
+                                {% else %}
+                                <span
+                                    class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Rejected</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500">{{ note.created_at|date:"M d, Y" }}</td>
+                            <td class="px-6 py-4 text-sm whitespace-nowrap">
+                                {% if note.status == 'PENDING' %}
+                                <a href="{% url 'notesapp:approve' note.pk %}"
+                                    class="text-green-600 hover:text-green-800 font-bold mr-3 underline">Approve</a>
+                                <a href="{% url 'notesapp:reject' note.pk %}"
+                                    class="text-red-600 hover:text-red-800 font-bold mr-3 underline">Reject</a>
+                                {% endif %}
+                                <a href="{% url 'notesapp:edit' note.pk %}"
+                                    class="text-indigo-600 hover:text-indigo-800 mr-3">Edit</a>
+                                <a href="{% url 'notesapp:detail' note.pk %}"
+                                    class="text-gray-400 hover:text-gray-600">View</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="px-6 py-8 text-center text-gray-400 italic">No notes created yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Newest Users -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-50">
+                <h2 class="text-xl font-bold text-gray-900">Latest Users</h2>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    {% for u in all_users %}
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold uppercase">
+                                {{ u.username|slice:":1" }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-900">{{ u.username }}</p>
+                                <p class="text-xs text-gray-500">{{ u.email }}</p>
+                            </div>
+                        </div>
+                        <span class="text-xs text-gray-400">Joined {{ u.date_joined|date:"M d" }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
